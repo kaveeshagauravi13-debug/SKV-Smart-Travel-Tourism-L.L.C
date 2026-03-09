@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKV Smart Travel & Tourism | Discover the World</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.cs" rel="stylesheet">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.cs">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.cs" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        primary: '#0f766e',
+                        secondary: '#f59e0b',
+                        accent: '#0d9488',
+                        dark: '#0f172a',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'slide-in-right': 'slideInRight 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideInRight: {
+                            '0%': { opacity: '0', transform: 'translateX(50px)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #0d9488 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .nav-scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .destination-card:hover .destination-overlay {
+            opacity: 1;
+        }
+        .destination-card:hover img {
+            transform: scale(1.1);
+        }
+        .loader {
+            border-top-color: #0d9488;
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 antialiased overflow-x-hidden">
+
+    <!-- Loading Screen -->
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500">
+        <div class="text-center">
+            <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-16 w-16 mb-4 mx-auto"></div>
+            <h2 class="text-xl font-serif text-primary font-semibold">SKV Smart Travel</h2>
+            <p class="text-gray-500 text-sm mt-2">Loading your adventure...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-40 transition-all duration-300 bg-transparent py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        SKV
+                    </div>
+                    <span class="text-2xl font-serif font-bold text-white nav-text transition-colors duration-300">Smart Travel</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-white hover:text-secondary transition-colors font-medium">Home</a>
+                    <a href="#destinations" class="nav-link text-white hover:text-secondary transition-colors font-medium">Destinations</a>
+                    <a href="#services" class="nav-link text-white hover:text-secondary transition-colors font-medium">Services</a>
+                    <a href="#packages" class="nav-link text-white hover:text-secondary transition-colors font-medium">Packages</a>
+                    <a href="#testimonials" class="nav-link text-white hover:text-secondary transition-colors font-medium">Reviews</a>
+                    <button onclick="openBookingModal()" class="bg-secondary hover:bg-orange-600 text-white px-6 py-2.5 rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg">
+                        Book Now
+                    </button>
+                </div>
+
+                <button id="mobile-menu-btn" class="md:hidden text-white nav-text focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-white shadow-xl">
+            <div class="px-4 py-6 space-y-4">
+                <a href="#home" class="block text-gray-800 hover:text-primary font-medium">Home</a>
+                <a href="#destinations" class="block text-gray-800 hover:text-primary font-medium">Destinations</a>
+                <a href="#services" class="block text-gray-800 hover:text-primary font-medium">Services</a>
+                <a href="#packages" class="block text-gray-800 hover:text-primary font-medium">Packages</a>
+                <a href="#testimonials" class="block text-gray-800 hover:text-primary font-medium">Reviews</a>
+                <button onclick="openBookingModal()" class="w-full bg-primary text-white px-6 py-3 rounded-lg font-semibold">Book Now</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background Image with Parallax -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://www.insuremytrip.com/travel-advice/travel-tips/how-to-take-travel-photos/" 
+                 alt="Travel Background" 
+                 class="w-full h-full object-cover scale-110 animate-pulse-slow"
+                 id="hero-bg">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
+        </div>
+
+        <!-- Animated Particles -->
+        <div class="absolute inset-0 z-10 hero-pattern opacity-30"></div>
+
+        <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="space-y-8 animate-fade-in-up">
+                <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-4 py-2 border border-white/20 mb-4">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span class="text-white/90 text-sm font-medium">Explore 50+ Countries Worldwide</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white leading-tight">
+                    Discover Your Next <br>
+                    <span class="text-gradient bg-gradient-to-r from-secondary to-orange-300 bg-clip-text text-transparent">Great Adventure</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto font-light leading-relaxed">
+                    Experience the world's most breathtaking destinations with SKV Smart Travel. 
+                    Curated journeys, premium service, unforgettable memories.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+                    <button onclick="scrollToSection('destinations')" class="group bg-secondary hover:bg-orange-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all transform hover:scale-105 shadow-2xl flex items-center space-x-2">
+                        <span>Explore Destinations</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    <button onclick="openVideoModal()" class="group glass-effect text-white px-8 py-4 rounded-full font-semibold text-lg transition-all hover:bg-white/20 flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary">
+                            <i class="fas fa-play ml-1"></i>
+                        </div>
+                        <span>Watch Video</span>
+                    </button>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 pt-8 border-t border-white/20">
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-white counter" data-target="50000">0</div>
+                        <div class="text-gray-300 text-sm mt-1">Happy Travelers</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-white counter" data-target="120">0</div>
+                        <div class="text-gray-300 text-sm mt-1">Destinations</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-white counter" data-target="15">0</div>
+                        <div class="text-gray-300 text-sm mt-1">Years Experience</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-white counter" data-target="98">0</div>
+                        <div class="text-gray-300 text-sm mt-1">% Satisfaction</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+            <div class="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center pt-2">
+                <div class="w-1.5 h-3 bg-white rounded-full animate-pulse"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Bar Section -->
+    <section class="relative z-30 -mt-16 px-4">
+        <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl p-6 md:p-8 transform hover:scale-[1.02] transition-transform duration-300">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-gray-600">Destination</label>
+                    <div class="relative">
+                        <i class="fas fa-map-marker-alt absolute left-3 top-3 text-primary"></i>
+                        <input type="text" placeholder="Where to?" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-gray-600">Date</label>
+                    <div class="relative">
+                        <i class="fas fa-calendar absolute left-3 top-3 text-primary"></i>
+                        <input type="date" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-gray-600">Travelers</label>
+                    <div class="relative">
+                        <i class="fas fa-users absolute left-3 top-3 text-primary"></i>
+                        <select class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all appearance-none bg-white">
+                            <option>1 Person</option>
+                            <option>2 People</option>
+                            <option>3-5 People</option>
+                            <option>6+ People</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex items-end">
+                    <button onclick="searchDestinations()" class="w-full bg-primary hover:bg-accent text-white py-3 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2">
+                        <i class="fas fa-search"></i>
+                        <span>Search</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Destinations Section -->
+    <section id="destinations" class="py-20 md:py-32 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary font-semibold tracking-wider uppercase text-sm">Popular Destinations</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-dark mt-3 mb-4">Explore the Unseen</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto text-lg">From tropical paradises to cultural capitals, discover our handpicked selection of extraordinary destinations.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Destination 1 -->
+                <div class="destination-card group relative overflow-hidden rounded-2xl shadow-xl cursor-pointer reveal" onclick="showDestinationDetails('bali')">
+                    <div class="aspect-[4/5] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80" 
+                             alt="Bali" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="destination-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-secondary font-semibold text-sm mb-1">Indonesia</span>
+                        <h3 class="text-white text-2xl font-serif font-bold mb-2">Bali Paradise</h3>
+                        <p class="text-gray-200 text-sm mb-4 line-clamp-2">Experience tropical bliss with ancient temples, pristine beaches, and vibrant culture.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white font-bold text-lg">BEST VALUE<span class="text-sm font-normal text-gray-300">/person</span></span>
+                            <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-semibold hover:bg-secondary hover:text-white transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary">
+                        <i class="fas fa-star text-secondary mr-1"></i>4.9
+                    </div>
+                </div>
+
+                <!-- Destination 2 -->
+                <div class="destination-card group relative overflow-hidden rounded-2xl shadow-xl cursor-pointer reveal" onclick="showDestinationDetails('santorini')">
+                    <div class="aspect-[4/5] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1613395877344-13d4c280d288?w=800&q=80" 
+                             alt="Santorini" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="destination-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-secondary font-semibold text-sm mb-1">Greece</span>
+                        <h3 class="text-white text-2xl font-serif font-bold mb-2">Santorini Dreams</h3>
+                        <p class="text-gray-200 text-sm mb-4 line-clamp-2">White-washed buildings, stunning sunsets, and crystal-clear Aegean waters await.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white font-bold text-lg">BEST VALUE<span class="text-sm font-normal text-gray-300">/person</span></span>
+                            <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-semibold hover:bg-secondary hover:text-white transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary">
+                        <i class="fas fa-star text-secondary mr-1"></i>4.8
+                    </div>
+                </div>
+
+                <!-- Destination 3 -->
+                <div class="destination-card group relative overflow-hidden rounded-2xl shadow-xl cursor-pointer reveal" onclick="showDestinationDetails('kyoto')">
+                    <div class="aspect-[4/5] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80" 
+                             alt="Kyoto" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="destination-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-secondary font-semibold text-sm mb-1">Japan</span>
+                        <h3 class="text-white text-2xl font-serif font-bold mb-2">Kyoto Heritage</h3>
+                        <p class="text-gray-200 text-sm mb-4 line-clamp-2">Ancient temples, traditional tea ceremonies, and breathtaking cherry blossoms.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white font-bold text-lg">BEST VALUE<span class="text-sm font-normal text-gray-300">/person</span></span>
+                            <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-semibold hover:bg-secondary hover:text-white transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary">
+                        <i class="fas fa-star text-secondary mr-1"></i>5.0
+                    </div>
+                </div>
+
+                <!-- Destination 4 -->
+                <div class="destination-card group relative overflow-hidden rounded-2xl shadow-xl cursor-pointer reveal" onclick="showDestinationDetails('maldives')">
+                    <div class="aspect-[4/5] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80" 
+                             alt="Maldives" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="destination-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-secondary font-semibold text-sm mb-1">Maldives</span>
+                        <h3 class="text-white text-2xl font-serif font-bold mb-2">Island Luxury</h3>
+                        <p class="text-gray-200 text-sm mb-4 line-clamp-2">Overwater villas, turquoise lagoons, and world-class diving experiences.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white font-bold text-lg">BEST VALUE<span class="text-sm font-normal text-gray-300">/person</span></span>
+                            <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-semibold hover:bg-secondary hover:text-white transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary">
+                        <i class="fas fa-star text-secondary mr-1"></i>4.9
+                    </div>
+                </div>
+
+                <!-- Destination 5 -->
+                <div class="destination-card group relative overflow-hidden rounded-2xl shadow-xl cursor-pointer reveal" onclick="showDestinationDetails('swiss')">
+                    <div class="aspect-[4/5] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=800&q=80" 
+                             alt="Swiss Alps" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="destination-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-secondary font-semibold text-sm mb-1">Switzerland</span>
+                        <h3 class="text-white text-2xl font-serif font-bold mb-2">Alpine Adventure</h3>
+                        <p class="text-gray-200 text-sm mb-4 line-clamp-2">Majestic peaks, pristine lakes, and charming villages in the heart of Europe.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white font-bold text-lg">BEST VALUE<span class="text-sm font-normal text-gray-300">/person</span></span>
+                            <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-semibold hover:bg-secondary hover:text-white transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary">
+                        <i class="fas fa-star text-secondary mr-1"></i>4.7
+                    </div>
+                </div>
+
+                <!-- Destination 6 -->
+                <div class="destination-card group relative overflow-hidden rounded-2xl shadow-xl cursor-pointer reveal" onclick="showDestinationDetails('dubai')">
+                    <div class="aspect-[4/5] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" 
+                             alt="Dubai" 
+                             class="w-full h-full object-cover transition-transform duration-700">
+                    </div>
+                    <div class="destination-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-secondary font-semibold text-sm mb-1">UAE</span>
+                        <h3 class="text-white text-2xl font-serif font-bold mb-2">Dubai Luxury</h3>
+                        <p class="text-gray-200 text-sm mb-4 line-clamp-2">Futuristic architecture, desert safaris, and unparalleled luxury shopping.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white font-bold text-lg">BEST VALUE<span class="text-sm font-normal text-gray-300">/person</span></span>
+                            <button class="bg-white text-dark px-4 py-2 rounded-full text-sm font-semibold hover:bg-secondary hover:text-white transition-colors">View Details</button>
+                        </div>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary">
+                        <i class="fas fa-star text-secondary mr-1"></i>4.8
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12 reveal">
+                <button class="border-2 border-primary text-primary hover:bg-primary hover:text-white px-8 py-3 rounded-full font-semibold transition-all duration-300">
+                    View All Destinations
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 md:py-32 bg-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <span class="text-primary font-semibold tracking-wider uppercase text-sm">Our Services</span>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-dark mt-3 mb-6">Travel Made Simple & Memorable</h2>
+                    <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                        We handle every detail of your journey, from flight bookings to local experiences, 
+                        ensuring you can focus on creating memories that last a lifetime.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4 group">
+                            <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 flex-shrink-0">
+                                <i class="fas fa-plane text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-dark mb-2">Flight Booking</h3>
+                                <p class="text-gray-600">Best deals on international and domestic flights with flexible cancellation options.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 group">
+                            <div class="w-14 h-14 bg-secondary/10 rounded-2xl flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-all duration-300 flex-shrink-0">
+                                <i class="fas fa-hotel text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-dark mb-2">Luxury Accommodation</h3>
+                                <p class="text-gray-600">Handpicked hotels, resorts, and villas that meet our premium standards.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 group">
+                            <div class="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-all duration-300 flex-shrink-0">
+                                <i class="fas fa-map-marked-alt text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-dark mb-2">Guided Tours</h3>
+                                <p class="text-gray-600">Expert local guides who bring destinations to life with authentic experiences.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 group">
+                            <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300 flex-shrink-0">
+                                <i class="fas fa-shield-alt text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-dark mb-2">Travel Insurance</h3>
+                                <p class="text-gray-600">Comprehensive coverage for peace of mind during your adventures.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative reveal">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-4 mt-8">
+                            <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&q=80" 
+                                 alt="Service 1" 
+                                 class="rounded-2xl shadow-lg w-full h-48 object-cover transform hover:scale-105 transition-transform duration-300">
+                            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80" 
+                                 alt="Service 2" 
+                                 class="rounded-2xl shadow-lg w-full h-64 object-cover transform hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <div class="space-y-4">
+                            <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&q=80" 
+                                 alt="Service 3" 
+                                 class="rounded-2xl shadow-lg w-full h-64 object-cover transform hover:scale-105 transition-transform duration-300">
+                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80" 
+                                 alt="Service 4" 
+                                 class="rounded-2xl shadow-lg w-full h-48 object-cover transform hover:scale-105 transition-transform duration-300">
+                        </div>
+                    </div>
+                    
+                    <!-- Floating Badge -->
+                    <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl animate-float hidden md:block">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                <i class="fas fa-check text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-dark">100%</div>
+                                <div class="text-sm text-gray-500">Satisfaction Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section id="packages" class="py-20 md:py-32 bg-dark text-white relative overflow-hidden">
+        <div class="absolute inset-0 hero-pattern opacity-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <span class="text-secondary font-semibold tracking-wider uppercase text-sm">Special Offers</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold mt-3 mb-4">Travel Packages</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg">Choose from our carefully crafted packages designed to give you the best value and experiences.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Basic Package -->
+                <div class="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 card-hover reveal">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-2">Explorer</h3>
+                        <p class="text-gray-400 text-sm">Perfect for solo travelers</p>
+                        <div class="mt-6">
+                            <span class="text-5xl font-bold">1,799 AED</span>
+                            <span class="text-gray-400">/trip</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-gray-300">3 Days / 2 Nights</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-gray-300">3-Star Hotel</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-gray-300">Daily Breakfast</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-gray-300">Airport Transfer</span>
+                        </li>
+                        <li class="flex items-center space-x-3 opacity-50">
+                            <i class="fas fa-times text-gray-500"></i>
+                            <span class="text-gray-500">Guided Tours</span>
+                        </li>
+                    </ul>
+                    <button onclick="selectPackage('explorer')" class="w-full py-4 rounded-xl border-2 border-white/20 hover:bg-white hover:text-dark font-semibold transition-all duration-300">
+                        Choose Plan
+                    </button>
+                </div>
+
+                <!-- Popular Package -->
+                <div class="bg-gradient-to-b from-secondary to-orange-600 rounded-3xl p-8 transform scale-105 shadow-2xl relative reveal">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-white text-secondary px-4 py-1 rounded-full text-sm font-bold shadow-lg">
+                        Most Popular
+                    </div>
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-2">Adventurer</h3>
+                        <p class="text-white/80 text-sm">Best for couples & friends</p>
+                        <div class="mt-6">
+                            <span class="text-5xl font-bold">2,099 AED</span>
+                            <span class="text-white/70">/trip</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-white"></i>
+                            <span class="text-white/90">7 Days / 6 Nights</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-white"></i>
+                            <span class="text-white/90">4-Star Hotel</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-white"></i>
+                            <span class="text-white/90">All Meals Included</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-white"></i>
+                            <span class="text-white/90">Private Transport</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-white"></i>
+                            <span class="text-white/90">5 Guided Tours</span>
+                        </li>
+                    </ul>
+                    <button onclick="selectPackage('adventurer')" class="w-full py-4 rounded-xl bg-white text-secondary hover:bg-gray-100 font-semibold transition-all duration-300 shadow-lg">
+                        Choose Plan
+                    </button>
+                </div>
+
+                <!-- Premium Package -->
+                <div class="bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 card-hover reveal">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-2">Luxury Elite</h3>
+                        <p class="text-gray-400 text-sm">Ultimate luxury experience</p>
+                        <div class="mt-6">
+                            <span class="text-5xl font-bold">2,499AED</span>
+                            <span class="text-gray-400">/trip</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-gray-300">14 Days / 13 Nights</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-gray-300">5-Star Resort</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-gray-300">Gourmet Dining</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-gray-300">Private Chauffeur</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-gray-300">Unlimited Tours</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-check text-secondary"></i>
+                            <span class="text-gray-300">Children Under 2 Travel Free</span>
+                        </li>
+                    </ul>
+                    <button onclick="selectPackage('luxury')" class="w-full py-4 rounded-xl border-2 border-white/20 hover:bg-white hover:text-dark font-semibold transition-all duration-300">
+                        Choose Plan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 md:py-32 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary font-semibold tracking-wider uppercase text-sm">Testimonials</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-dark mt-3 mb-4">Customers Review</h2>
+            </div>
+
+            <div class="relative max-w-4xl mx-auto reveal">
+                <div id="testimonial-container" class="overflow-hidden">
+                    <div id="testimonial-slider" class="flex transition-transform duration-500 ease-out">
+                        <!-- Testimonial 1 -->
+                        <div class="w-full flex-shrink-0 px-4">
+                            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl text-center">
+                                <div class="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/20">
+                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80" alt="User" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex justify-center mb-4 text-secondary">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p class="text-gray-600 text-lg italic mb-6">"SKV Smart Travel made our honeymoon absolutely magical. Every detail was perfect, from the airport pickup to the surprise dinner on the beach. We couldn't have asked for a better experience!"</p>
+                                <h4 class="font-bold text-dark text-lg">Sarah & Mike Johnson</h4>
+                                <p class="text-primary text-sm">Visited Maldives</p>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 2 -->
+                        <div class="w-full flex-shrink-0 px-4">
+                            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl text-center">
+                                <div class="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/20">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="User" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex justify-center mb-4 text-secondary">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p class="text-gray-600 text-lg italic mb-6">"As a solo traveler, safety was my main concern. SKV not only ensured I felt secure but also connected me with amazing local experiences I would never have found on my own."</p>
+                                <h4 class="font-bold text-dark text-lg">David Chen</h4>
+                                <p class="text-primary text-sm">Explored Japan</p>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 3 -->
+                        <div class="w-full flex-shrink-0 px-4">
+                            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl text-center">
+                                <div class="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/20">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80" alt="User" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex justify-center mb-4 text-secondary">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <p class="text-gray-600 text-lg italic mb-6">"The best travel agency I've ever used. Their attention to detail and 24/7 support gave us peace of mind throughout our European adventure. Highly recommend!"</p>
+                                <h4 class="font-bold text-dark text-lg">Emma Williams</h4>
+                                <p class="text-primary text-sm">European Tour</p>
+                            </div>
+                        </div>
+               
+                        <!-- Testimonial 4 -->
+                        <div class="w-full flex-shrink-0 px-4">
+                            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-x1 text-center">
+                                <div class="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/20">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmeGLJj20_GnSpMIZvefD9bDMtYnasF3LWIg&s" alt="User" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex justify-center mb-4 text-secondary">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                               </div>
+                               <p class="text-gray-600 text-lg italic mb-6">"Our family trip was seamless thanks to SKV Smart Travel.Every hotel and activity was perfectly arranged,and the kids had a blast! Truly stress-free and memorable."</p>
+                               <h4 class="font-blod text-dark text-lg">Sofia Carson</h4>
+                               <p class="text-primary text-sm">Sri Lankan Tour</p>
+                           </div>
+                       </div>
+                               
+                       <!-- Testimonial 5 -->
+                       <div class="w-full flex-shrink-0 px-4">
+                           <div class="bg-white rounded-3xl p-8 md:p-12 shadow-x1 text-center">
+                               <div class="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/20">
+                                   <img scr="https://www.linkedin.com/pub/dir/Lakshan/Fernando" alt="User" class="w-full h-full object-cove">
+                               </div>
+                               <div class="flex justify-center mb-4 text-secondary"> 
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star-half-alt"></i>
+                              <p class="tex-gray-600 text-lg italic mb-6">"I went on an adventure tour and SKV made it unforgettable.From trekking to local food experiences,everything was organized perfectly.Highly recommend for thrill-seekers!"</p>
+                              <h4 class="font-blod text-dark text-lg">Lakshan Fernando</h4>
+                              <p class="text-primary text-sm">Dubai Tour</p>
+                          </div>
+                      </div>
+                        
+                             <!-- Testimonial 6 --> 
+                             <div class="w-full flex-shrink-0 px-4">
+                                 <div class="bg-white rounded-3xl p-8 md:p-12 shadow-x1 text-center">
+                                     <div class="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/20">
+                                         <img scr="https://www.zola.com/wedding/sharanyaandanirudh/photo" alt="User" class="w-full h-full object-cove">
+                                     </div>
+                                     <div class="flex justify-center mb-4 text-secondary">
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star-half-alt"></i>
+                              <p class="tex-gray-600 text-lg italic mb-6">"SKV Smart Travel turned our anniversary trip into a dream come true.From romantic dinners to sightseeing,every detail was thoughtful.Eceptional service and care!"</p>
+                              <h4 class="font-blod text-dark text-lg">Sharanya & Anirudh</h4>
+                              <p class="text-primary text-sm">London Tour</p>
+                          </div>  
+                       </div>
+                          <!-- Testimonial 7 --> 
+                             <div class="w-full flex-shrink-0 px-4">
+                                 <div class="bg-white rounded-3xl p-8 md:p-12 shadow-x1 text-center">
+                                     <div class="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/20">
+                                         <img scr="https://dsklegal.com/team/vinodh-kumar/" alt="User" class="w-full h-full object-cove">
+                                     </div>
+                                     <div class="flex justify-center mb-4 text-secondary">
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star"></i>
+                                   <i class="fas fa-star-half-alt"></i>
+                              <p class="tex-gray-600 text-lg italic mb-6">"SKV handled my business trip flawlessly.Timely transfers, comfortable accommodation,and excellent support made it smooth and productive.I will definitely use them again."</p>
+                              <h4 class="font-blod text-dark text-lg">Vinodh Kumar</h4>
+                              <p class="text-primary text-sm">India Tour</p>
+                          </div>  
+                       </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <button onclick="prevTestimonial()" class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 md:-translate-x-12 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button onclick="nextTestimonial()" class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 md:translate-x-12 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <!-- Dots -->
+                <div class="flex justify-center space-x-2 mt-8">
+                    <button onclick="goToTestimonial(0)" class="testimonial-dot w-3 h-3 rounded-full bg-primary transition-all"></button>
+                    <button onclick="goToTestimonial(1)" class="testimonial-dot w-3 h-3 rounded-full bg-gray-300 transition-all"></button>
+                    <button onclick="goToTestimonial(2)" class="testimonial-dot w-3 h-3 rounded-full bg-gray-300 transition-all"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-20 bg-primary relative overflow-hidden">
+        <div class="absolute inset-0 hero-pattern opacity-10"></div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10 reveal">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Subscribe to Our Newsletter</h2>
+            <p class="text-white/80 mb-8">Get exclusive deals, travel tips, and inspiration delivered to your inbox.</p>
+            <form onsubmit="handleSubscribe(event)" class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+                <input type="email" placeholder="Enter your email" required 
+                       class="flex-1 px-6 py-4 rounded-full focus:outline-none focus:ring-4 focus:ring-white/30 text-gray-800">
+                <button type="submit" class="bg-secondary hover:bg-orange-600 text-white px-8 py-4 rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg">
+                    Subscribe
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                            SKV
+                        </div>
+                        <span class="text-2xl font-serif font-bold">Smart Travel</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">Creating unforgettable travel experiences. Your journey to discovery starts here.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Quick Links</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="#home" class="hover:text-secondary transition-colors">Home</a></li>
+                        <li><a href="#destinations" class="hover:text-secondary transition-colors">Destinations</a></li>
+                        <li><a href="#services" class="hover:text-secondary transition-colors">Services</a></li>
+                        <li><a href="#packages" class="hover:text-secondary transition-colors">Packages</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Support</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="#" class="hover:text-secondary transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Contact Info</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt mt-1 text-primary"></i>
+                            <span>United Arab Emirates, Sharjah<br>Main Branch</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-primary"></i>
+                            <span>0568534961 / 0569412709</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-whatsapp text-primary"></i>
+                            <span>+1(873)446-7438</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-primary"></i>
+                            <span>hello@skvsmarttravels.agency</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">&copy; SKV Smart Travel & Tourism. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0 text-sm text-gray-400">
+                    <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms</a>
+                    <a href="#" class="hover:text-white transition-colors">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeBookingModal()"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 animate-fade-in-up">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-dark">Book Your Trip</h3>
+                <button onclick="closeBookingModal()" class="text-gray-400 hover:text-dark">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form onsubmit="handleBooking(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                    <input type="text" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                    <input type="email" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                    <input type="tel" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Destination</label>
+                    <select class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20">
+                        <option>Bali, Indonesia</option>
+                        <option>Santorini, Greece</option>
+                        <option>Kyoto, Japan</option>
+                        <option>Maldives</option>
+                        <option>Swiss Alps</option>
+                        <option>Dubai, UAE</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-accent text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-[1.02] shadow-lg mt-4">
+                    Submit Booking Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="video-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeVideoModal()"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl px-4">
+            <button onclick="closeVideoModal()" class="absolute -top-12 right-4 text-white hover:text-secondary transition-colors">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            <div class="aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center">
+                <div class="text-center text-white">
+                    <i class="fas fa-play-circle text-6xl mb-4 text-secondary"></i>
+                    <p class="text-xl">Promotional Video Placeholder</p>
+                    <p class="text-gray-400 mt-2">In production - Coming Soon!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-8 right-8 bg-dark text-white px-6 py-4 rounded-xl shadow-2xl transform translate-y-24 transition-transform duration-300 z-50 flex items-center space-x-3">
+        <i class="fas fa-check-circle text-green-400 text-xl"></i>
+        <span id="toast-message">Operation successful!</span>
+    </div>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const navText = document.querySelectorAll('.nav-text');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scrolled');
+                navLinks.forEach(link => {
+                    link.classList.remove('text-white');
+                    link.classList.add('text-gray-800');
+                });
+                navText.forEach(text => {
+                    text.classList.remove('text-white');
+                    text.classList.add('text-gray-800');
+                });
+            } else {
+                navbar.classList.remove('nav-scrolled');
+                navLinks.forEach(link => {
+                    link.classList.add('text-white');
+                    link.classList.remove('text-gray-800');
+                });
+                navText.forEach(text => {
+                    text.classList.add('text-white');
+                    text.classList.remove('text-gray-800');
+                });
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth Scroll
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Intersection Observer for Reveal Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Trigger counters if in stats section
+                    if (entry.target.querySelector('.counter')) {
+                        animateCounters();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Counter Animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+
+                const updateCounter = () => {
+                    current += step;
+                    if (current < target) {
+                        counter.textContent = Math.floor(current).toLocaleString();
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target.toLocaleString() + (target < 100 ? '' : '+');
+                    }
+                };
+
+                updateCounter();
+            });
+        }
+
+        // Testimonial Slider
+        let currentTestimonial = 0;
+        const totalTestimonials = 3;
+
+        function updateTestimonialSlider() {
+            const slider = document.getElementById('testimonial-slider');
+            slider.style.transform = `translateX(-${currentTestimonial * 100}%)`;
+            
+            // Update dots
+            document.querySelectorAll('.testimonial-dot').forEach((dot, index) => {
+                if (index === currentTestimonial) {
+                    dot.classList.remove('bg-gray-300');
+                    dot.classList.add('bg-primary');
+                } else {
+                    dot.classList.remove('bg-primary');
+                    dot.classList.add('bg-gray-300');
+                }
+            });
+        }
+
+        function nextTestimonial() {
+            currentTestimonial = (currentTestimonial + 1) % totalTestimonials;
+            updateTestimonialSlider();
+        }
+
+        function prevTestimonial() {
+            currentTestimonial = (currentTestimonial - 1 + totalTestimonials) % totalTestimonials;
+            updateTestimonialSlider();
+        }
+
+        function goToTestimonial(index) {
+            currentTestimonial = index;
+            updateTestimonialSlider();
+        }
+
+        // Auto-advance testimonials
+        setInterval(nextTestimonial, 5000);
+
+        // Modal Functions
+        function openBookingModal() {
+            document.getElementById('booking-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openVideoModal() {
+            document.getElementById('video-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal() {
+            document.getElementById('video-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Form Handlers
+        function handleBooking(e) {
+            e.preventDefault();
+            closeBookingModal();
+            showToast('Booking request submitted successfully! We will contact you shortly.');
+        }
+
+        function handleSubscribe(e) {
+            e.preventDefault();
+            e.target.reset();
+            showToast('Thank you for subscribing! Check your inbox for exclusive deals.');
+        }
+
+        function searchDestinations() {
+            showToast('Searching for best destinations...');
+            setTimeout(() => {
+                scrollToSection('destinations');
+            }, 1000);
+        }
+
+        function selectPackage(packageName) {
+            showToast(`You selected the ${packageName.charAt(0).toUpperCase() + packageName.slice(1)} package!`);
+            setTimeout(() => {
+                openBookingModal();
+            }, 1000);
+        }
+
+        function showDestinationDetails(destination) {
+            const destinations = {
+                'bali': 'Bali - Island of Gods: Experience tropical paradise',
+                'santorini': 'Santorini - Romantic sunsets and white architecture',
+                'kyoto': 'Kyoto - Ancient temples and traditional culture',
+                'maldives': 'Maldives - Ultimate luxury overwater experience',
+                'swiss': 'Swiss Alps - Majestic mountains and pristine nature',
+                'dubai': 'Dubai - Modern luxury meets Arabian heritage'
+            };
+            showToast(destinations[destination] || 'Destination details coming soon!');
+        }
+
+        // Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('translate-y-24');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-24');
+            }, 3000);
+        }
+
+        // Parallax Effect for Hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroBg = document.getElementById('hero-bg');
+            if (heroBg) {
+                heroBg.style.transform = `translateY(${scrolled * 0.5}px) scale(1.1)`;
+            }
+        });
+
+        // Close modals on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeBookingModal();
+                closeVideoModal();
+            }
+        });
+    </script>
+</body>
+</html>
